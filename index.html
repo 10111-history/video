@@ -1,9 +1,75 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
-  <title>Video</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YouTube Fullpage</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      background: #fff;          /* белые поля */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    #video-wrapper {
+      position: relative;
+      flex-shrink: 0;
+      /* размер задаётся JS-ом */
+    }
+
+    iframe {
+      display: block;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+  </style>
 </head>
 <body>
-  <iframe width="100%" src="https://www.youtube.com/embed/IEjXOs7ehUw?si=Tta0qqj4YvFPp0tC&amp;controls=0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen style="100vh"> </iframe>
+
+  <div id="video-wrapper">
+    <iframe
+      id="yt-iframe"
+      src="https://www.youtube.com/embed/IEjXOs7ehUw?autoplay=0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media;
+             gyroscope; picture-in-picture; web-share"
+      allowfullscreen
+    ></iframe>
+  </div>
+
+  <script>
+    const RATIO = 16 / 9;   // соотношение сторон видео
+    const wrapper = document.getElementById('video-wrapper');
+
+    function resize() {
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+
+      let w, h;
+
+      if (vw / vh > RATIO) {
+        // страница шире — ограничиваем по высоте, поля слева/справа
+        h = vh;
+        w = h * RATIO;
+      } else {
+        // страница уже — ограничиваем по ширине, поля сверху/снизу
+        w = vw;
+        h = w / RATIO;
+      }
+
+      wrapper.style.width  = w + 'px';
+      wrapper.style.height = h + 'px';
+    }
+
+    resize();
+    window.addEventListener('resize', resize);
+  </script>
+
 </body>
 </html>
